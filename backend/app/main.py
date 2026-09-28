@@ -84,3 +84,23 @@ app.include_router(auth.router)
 app.include_router(decisions.router)
 app.include_router(reports.router)
 app.include_router(admin.router)
+
+
+# Serve the React frontend (single-origin deploy: frontend + backend on one URL).
+# The Docker image copies frontend/dist to /app/frontend-dist.
+# API routes (/api/*) are matched first; everything else serves the SPA.
+try:
+    from fastapi.staticfiles import StaticFiles
+
+    _FRONTEND_DIR = os.environ.get("FRONTEND_DIR", "/app/frontend-dist")
+    if os.path.isdir(_FRONTEND_DIR):
+        app.mount(
+            "/",
+            StaticFiles(directory=_FRONTEND_DIR, html=True),
+            name="frontend",
+        )
+        log.info("Serving frontend from %s", _FRONTEND_DIR)
+    else:
+        log.info("Frontend dir %s not found; API-only mode.", _FRONTEND_DIR)
+except Exception as exc:  # staticfiles not installed or other issue
+    log.warning("Frontend static serving disabled: %s", exc)
