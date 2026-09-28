@@ -1,0 +1,1 @@
+{"dependencies":{"react":"^18.3.1","react-dom":"^18.3.1"},"description":"Old-school frontend for the Topaz-VBE (Edit 515) Virtual Business Environment replica","devDependencies":{"@vitejs/plugin-react":"^4.3.4","vite":"^5.4.11"},"name":"topaz-vbe-frontend","private":true,"scripts":{"build":"vite build","dev":"vite","preview":"vite preview"},"type":"module","version":"1.0.0"}

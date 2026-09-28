@@ -1,0 +1,381 @@
+/* ============================================================
+   Topaz-VBE — classic old-school look.
+   Cream page, dark-red headings, blue underlined links,
+   compact bordered tables, beveled gray buttons.
+   No rounded corners, no gradients, no shadows, no cards.
+   ============================================================ */
+
+body {
+  background: #ffffe0;
+  color: #000000;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  margin: 0;
+  padding: 0;
+}
+
+.topaz-page {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 6px 10px 30px 10px;
+}
+
+h1 {
+  font-size: 20px;
+  color: #8b0000;
+  margin: 8px 0;
+}
+
+h2 {
+  font-size: 16px;
+  color: #8b0000;
+  border-bottom: 1px solid #999999;
+  padding-bottom: 2px;
+  margin: 14px 0 6px 0;
+}
+
+h3 {
+  font-size: 14px;
+  color: #8b0000;
+  margin: 10px 0 4px 0;
+}
+
+a {
+  color: #0000ee;
+  text-decoration: underline;
+  font-size: 13px;
+}
+
+a:visited {
+  color: #551a8b;
+}
+
+a:active {
+  color: #ee0000;
+}
+
+p, li, td, th, label, legend {
+  font-size: 13px;
+}
+
+/* ---------- header bar ---------- */
+.header-bar {
+  border: 1px solid #999999;
+  background: #e8e8c8;
+  margin-bottom: 6px;
+}
+
+.header-bar table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.header-bar td {
+  padding: 6px 10px;
+  vertical-align: top;
+}
+
+.header-bar h1 {
+  margin: 2px 0;
+}
+
+.header-right {
+  text-align: right;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* ---------- classic nav: a bordered table row of links ---------- */
+table.classic-nav {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 6px 0;
+}
+
+table.classic-nav td {
+  border: 1px solid #999999;
+  background: #f0f0d0;
+  padding: 5px 6px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+table.classic-nav td a {
+  font-size: 12px;
+}
+
+table.classic-nav td.current {
+  background: #d8d8b0;
+}
+
+/* ---------- compact data tables ---------- */
+.table-scroll {
+  overflow-x: auto;
+  margin: 4px 0;
+}
+
+table.data {
+  border-collapse: collapse;
+  margin: 4px 0;
+  background: #ffffff;
+}
+
+table.data th,
+table.data td {
+  border: 1px solid #999999;
+  padding: 2px 6px;
+  font-size: 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+table.data th {
+  background: #e3e3c8;
+  font-weight: bold;
+}
+
+table.data td.num,
+table.data th.num {
+  text-align: right;
+  white-space: nowrap;
+}
+
+table.data td.center,
+table.data th.center {
+  text-align: center;
+}
+
+table.data tr.total td {
+  font-weight: bold;
+  background: #f5f5dc;
+}
+
+table.kv {
+  border-collapse: collapse;
+  margin: 4px 0;
+  background: #ffffff;
+}
+
+table.kv th,
+table.kv td {
+  border: 1px solid #999999;
+  padding: 2px 8px;
+  font-size: 12px;
+  text-align: left;
+}
+
+table.kv th {
+  background: #e3e3c8;
+  font-weight: normal;
+  width: 60%;
+}
+
+table.kv td {
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ---------- forms ---------- */
+fieldset {
+  border: 1px solid #999999;
+  margin: 8px 0;
+  padding: 8px 10px;
+  background: #ffffff;
+}
+
+legend {
+  font-weight: bold;
+  color: #8b0000;
+  padding: 0 5px;
+  font-size: 13px;
+}
+
+.form-row {
+  margin: 3px 0;
+}
+
+label.field-label {
+  display: inline-block;
+  width: 260px;
+  font-size: 12px;
+  vertical-align: middle;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="password"],
+select,
+textarea {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  border: 1px solid #7f7f7f;
+  padding: 1px 3px;
+  background: #ffffff;
+  border-radius: 0;
+}
+
+input:disabled,
+select:disabled {
+  background: #eeeeee;
+  color: #555555;
+}
+
+input[type="checkbox"] {
+  vertical-align: middle;
+}
+
+.check-row {
+  margin: 3px 0;
+  font-size: 12px;
+}
+
+/* ---------- beveled gray buttons ---------- */
+button,
+input[type="submit"],
+input[type="button"] {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  background: #d4d0c8;
+  border: 2px outset #d4d0c8;
+  border-radius: 0;
+  padding: 2px 14px;
+  margin: 2px 4px 2px 0;
+  cursor: pointer;
+  color: #000000;
+}
+
+button:active,
+input[type="submit"]:active,
+input[type="button"]:active {
+  border-style: inset;
+}
+
+button:disabled {
+  color: #808080;
+  cursor: default;
+}
+
+.button-bar {
+  margin: 8px 0;
+  padding: 6px 0;
+  border-top: 1px solid #999999;
+}
+
+/* ---------- message boxes ---------- */
+.error-list {
+  color: #a00000;
+  border: 1px solid #a00000;
+  background: #ffe0e0;
+  padding: 6px 10px;
+  margin: 8px 0;
+  font-size: 12px;
+}
+
+.error-list ul {
+  margin: 4px 0 4px 18px;
+  padding: 0;
+}
+
+.warning-list {
+  color: #6b4e00;
+  border: 1px solid #a08000;
+  background: #fff8dc;
+  padding: 6px 10px;
+  margin: 8px 0;
+  font-size: 12px;
+}
+
+.warning-list ul {
+  margin: 4px 0 4px 18px;
+  padding: 0;
+}
+
+.success-box {
+  color: #005000;
+  border: 1px solid #008000;
+  background: #e0ffe0;
+  padding: 8px 10px;
+  margin: 8px 0;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.info-box {
+  border: 1px solid #999999;
+  background: #f5f5dc;
+  padding: 6px 10px;
+  margin: 8px 0;
+  font-size: 12px;
+}
+
+/* ---------- confirm box (plain, no shadow) ---------- */
+.confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #808080;
+  opacity: 1;
+  z-index: 50;
+}
+
+.confirm-box {
+  position: fixed;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 51;
+  background: #ffffe0;
+  border: 2px outset #d4d0c8;
+  padding: 12px 16px;
+  width: 420px;
+  max-width: 90%;
+}
+
+.confirm-box p {
+  font-size: 13px;
+  margin: 0 0 10px 0;
+}
+
+/* ---------- misc ---------- */
+.note {
+  font-size: 12px;
+  color: #333333;
+}
+
+.small {
+  font-size: 11px;
+}
+
+.criterion {
+  color: #8b0000;
+  font-weight: bold;
+  font-size: 13px;
+  margin: 12px 0;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid #999999;
+  margin: 10px 0;
+}
+
+.login-box {
+  width: 480px;
+  max-width: 100%;
+  margin: 30px auto;
+  border: 1px solid #999999;
+  background: #ffffff;
+  padding: 12px 16px;
+}
+
+.footer-note {
+  margin-top: 24px;
+  padding-top: 6px;
+  border-top: 1px solid #999999;
+  font-size: 11px;
+  color: #555555;
+  text-align: center;
+}

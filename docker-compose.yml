@@ -1,0 +1,91 @@
+# Topaz-VBE replica — full-stack Docker deployment.
+#
+# One-command start:
+#   cp .env.example .env
+#   docker compose up --build
+#
+# Then open:
+#   Frontend  http://localhost:8080/
+#   API docs  http://localhost:8000/docs
+#
+# Demo logins (seeded by migration 002):
+#   Team:  simulation code TOPAZ-DEMO, group 1, company 1..4, identity ID-1001..ID-1004
+#   Admin: username/password from ADMIN_USER / ADMIN_PASSWORD in .env
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-topaz}
+      POSTGRES_USER: ${POSTGRES_USER:-topaz}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-topaz}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-topaz}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # One-shot: applies db/migrations/*.sql in order (tracked in schema_migrations).
+  migrate:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    command: ["python", "/app/db/migrate.py"]
+    volumes:
+      - ./db:/app/db:ro
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-topaz}:${POSTGRES_PASSWORD:-topaz}@db:5432/${POSTGRES_DB:-topaz}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  api:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-topaz}:${POSTGRES_PASSWORD:-topaz}@db:5432/${POSTGRES_DB:-topaz}
+      SECRET_KEY: ${SECRET_KEY:-change-me-in-production}
+      ADMIN_USER: ${ADMIN_USER:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123}
+      # Event-driven roll: the API enqueues quarter_jobs rows; the worker runs them.
+      # Set to "sync" to run the engine as a subprocess inside the API instead.
+      QUARTER_ROLL_MODE: ${QUARTER_ROLL_MODE:-queue}
+    ports:
+      - "${API_PORT:-8000}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  # Engine worker: claims pending quarter_jobs rows (FOR UPDATE SKIP LOCKED)
+  # and runs the deterministic batch. Safe to scale: docker compose up --scale worker=3
+  worker:
+    build:
+      context: .
+      dockerfile: engine/Dockerfile
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-topaz}:${POSTGRES_PASSWORD:-topaz}@db:5432/${POSTGRES_DB:-topaz}
+      WORKER_POLL_SECONDS: ${WORKER_POLL_SECONDS:-5}
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "${FRONTEND_PORT:-8080}:80"
+    depends_on:
+      - api
+
+volumes:
+  pgdata:

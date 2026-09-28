@@ -1,0 +1,52 @@
+# Topaz-VBE replica — Render Blueprint (free tier).
+# Deploy: connect this repo in Render → New → Blueprint → select render.yaml.
+# Demo logins (seeded by migrations):
+#   Team:  simulation code TOPAZ-DEMO, group 1, company 1, identity ID-1001
+#   Admin: admin / admin123 (override via env vars below)
+
+services:
+  # --- FastAPI backend -----------------------------------------------------
+  - type: web
+    name: topaz-vbe-api
+    runtime: python
+    plan: free
+    buildCommand: "pip install -r backend/requirements.txt"
+    # Apply migrations on every deploy, then start the API (sync engine mode).
+    startCommand: "python db/migrate.py && cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
+      - key: DATABASE_URL
+        fromDatabase:
+          name: topaz-vbe-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ADMIN_USER
+        value: admin
+      - key: ADMIN_PASSWORD
+        value: admin123
+      # "sync" runs the engine as a subprocess inside the API (no worker needed).
+      - key: QUARTER_ROLL_MODE
+        value: sync
+    healthCheckPath: /api/health
+
+  # --- React frontend (static) ---------------------------------------------
+  - type: web
+    name: topaz-vbe-frontend
+    runtime: static
+    plan: free
+    buildCommand: "cd frontend && npm ci && npm run build"
+    staticPublishPath: frontend/dist
+    envVars:
+      # Points the built JS at the backend API above.
+      - key: VITE_API_URL
+        value: https://topaz-vbe-api.onrender.com/api
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+databases:
+  - name: topaz-vbe-db
+    plan: free
