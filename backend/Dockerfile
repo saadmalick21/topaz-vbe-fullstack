@@ -24,9 +24,12 @@ WORKDIR /app
 # Copy the simulation engine (built by the engine builder) and the backend.
 COPY engine/ /app/engine/
 COPY backend/ /app/backend/
+COPY db/ /app/db/
 
 RUN pip install --no-cache-dir -r /app/backend/requirements.txt
 
 EXPOSE 8000
 
-CMD ["uvicorn", "app.main:app", "--app-dir", "/app/backend", "--host", "0.0.0.0", "--port", "8000"]
+# Run DB migrations on startup (safe: tracked in schema_migrations),
+# then start the API. Uses $PORT if set (Koyeb/Render), else 8000.
+CMD ["sh", "-c", "python /app/db/migrate.py && uvicorn app.main:app --app-dir /app/backend --host 0.0.0.0 --port ${PORT:-8000}"]
