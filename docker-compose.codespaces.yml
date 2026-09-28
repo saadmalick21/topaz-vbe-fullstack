@@ -1,0 +1,37 @@
+# Topaz-VBE for GitHub Codespaces — single container (backend serves frontend) + Postgres.
+# The Codespace's devcontainer.json runs: docker compose -f docker-compose.codespaces.yml up -d --build
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: topaz
+      POSTGRES_USER: topaz
+      POSTGRES_PASSWORD: topaz
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U topaz"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql://topaz:topaz@db:5432/topaz
+      SECRET_KEY: codespace-demo-secret
+      ADMIN_USER: admin
+      ADMIN_PASSWORD: admin123
+      QUARTER_ROLL_MODE: sync
+      PORT: 8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
